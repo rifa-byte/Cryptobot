@@ -1,11 +1,14 @@
-# exchange_client.py
+# exchange_client.py (OKX version)
 import ccxt
-import config
+import os
 
 def get_exchange():
-    exchange_class = getattr(ccxt, config.EXCHANGE_ID)
-    exchange = exchange_class({"enableRateLimit": True})
+    exchange = ccxt.okx({
+        "apiKey": os.getenv("OKX_API_KEY"),
+        "secret": os.getenv("OKX_SECRET"),
+        "password": os.getenv("OKX_PASSWORD"),
+        "enableRateLimit": True,
+    })
+    # OKX demo mode
+    # exchange.set_sandbox_mode(True)  # uncomment if you create a demo key
     return exchange
-
-def fetch_candles(exchange, symbol, timeframe="15m", limit=100):
-    return exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
